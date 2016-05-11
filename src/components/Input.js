@@ -2,32 +2,23 @@ import { Component, createElement, createFactory } from 'react'
 import { findDOMNode } from 'react-dom'
 import { compose, tap } from 'ramda'
 
-var i = 0
-
-export default createFactory(class extends Component {
-  constructor() {
-    super()
-    this.refKey = 'inputRef' + i++
-  }
+class Input extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.focus) {
-      findDOMNode(this.refs[this.refKey]).focus();
+      this._input.focus()
     } else {
-      findDOMNode(this.refs[this.refKey]).blur();
-    }
-  }
-  onEnterPress(fn) => (e) {
-    if (e.key === 'Enter') {
-      fn(e)
+      this._input.blur()
     }
   }
   render() {
-    const { ref, autoFocus, ...props } = this.props
-    return createElement('input', {
-      ref: this.refKey,
-      autoFocus: this.props.focus,
-      onKeyPress: compose(tap(props.onKeyPress), tap(props.onEnterPress))
-      ...this.props
-    })
+    const { onEnterPress, onKeyPress, autoFocus, focus, ...props } = this.props 
+    <input
+      ref={i => this._input = i}
+      autoFocus={autoFocus || focus}
+      onKeyPress={compose(onKeyPress, when(prop('key', 'Enter'), tap(onEnterPress)))}
+      {...props} 
+    />
   }
-})
+}
+
+export default Input
