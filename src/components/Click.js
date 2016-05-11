@@ -1,7 +1,7 @@
-import { Component, createElement, createFactory } from 'react'
+import React from 'react'
 import { findDOMNode } from 'react-dom'
 
-export default createFactory(class extends Component {
+class Click extends React.Component {
   handleDocumentClick(e) {
     if (!findDOMNode(this).contains(e.target)) {
       if (this.props.onClickOutside) {
@@ -20,6 +20,8 @@ export default createFactory(class extends Component {
     document.removeEventListener('click', this.handleDocumentClick, false);
   }
   render() {
-    return div(this.children)
+    return <div>{this.children}</div>
   }
-})
+}
+
+export default Click
